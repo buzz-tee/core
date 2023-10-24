@@ -210,12 +210,15 @@ class FritzBoxCallMonitor:
         while not self.stopped.is_set():
             try:
                 event = event_queue.get(timeout=10)
-            except queue.Empty:
+            except queue.Empty as e:
                 if (
                     not cast(FritzMonitor, self.connection).is_alive
                     and not self.stopped.is_set()
                 ):
-                    _LOGGER.error("Connection has abruptly ended")
+                    _LOGGER.error(e)
+                    _LOGGER.error("Connection has abruptly ended - restarting")
+                    self.connect()
+                    return
                 _LOGGER.debug("Empty event queue")
                 continue
             else:
