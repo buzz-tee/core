@@ -128,7 +128,6 @@ class AFSAPIDevice(MediaPlayerEntity):
             self.__modes_by_label = {
                 (mode.label if mode.label else mode.id): mode.key
                 for mode in await afsapi.get_modes()
-                if mode.selectable
             }
             self._attr_source_list = list(self.__modes_by_label)
 
